@@ -14,7 +14,7 @@ enum actionLevel {
 }
 
 type Notification{
-  id: ID! @unique
+  id: ID! @id
   generatedOn: String!
   modifiedOn: String
   gcID: String!
@@ -27,6 +27,7 @@ type Notification{
 }
 
 type whoDunIt {
+  id: ID! @id
   gcID: String,
   teamID: String,
   organizationID: String
@@ -34,21 +35,21 @@ type whoDunIt {
 }
 
 type Email {
-  id: ID! @unique
+  id: ID! @id
   from: String!
   to: String!
   subject: String!
   body: String!
   status: Status!
   sendError: String
-  html: Boolean! @default(value:"false")
+  html: Boolean! @default(value:false)
 }
 
 type Online {
-  id: ID! @unique
+  id: ID! @id
   titleEn: String!
   titleFr: String!
   descriptionEn: String!
   descriptionFr: String!
-  viewed: Boolean! @default(value:"false")
+  viewed: Boolean! @default(value:false)
 }

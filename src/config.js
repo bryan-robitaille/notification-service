@@ -2,6 +2,10 @@ require("dotenv").config();
 // set runtime environment as'development' or 'production'
 const env = process.env.NODE_ENV; 
 
+// Get app basic config settings for Prisma
+const appName = process.env.APP_NAME;
+const prismaHost =  process.env.PRISMA_HOST;
+
 // OpenID provider clientID and Secret
 const clientId = process.env.client_id;
 const clientSecret = process.env.client_secret;
@@ -23,19 +27,19 @@ const development = {
    tracing: true
  },
  prisma: {
-     host:"localhost",
-     debug: true
- },
+  host: prismaHost + "/" + appName + "/dev",
+  debug: true
+},
  rabbitMQ:{
    host:"localhost",
    user: mqUser,
    password: mqPass
  },
  openId:{
-   url:"http://localhost:8000",
-   id:clientId,
-   secret:clientSecret
- },
+  url:"https://account.da-an.ca",
+  id:clientId,
+  secret:clientSecret
+},
  email:{
    email:userMail,
    password:passMail,
@@ -51,16 +55,16 @@ const production = {
    tracing: false
  },
  prisma: {
-     host: "prisma",
-     debug: false
- },
-rabbitMQ:{
-  host:"mq.gccollab.ca",
+  host: prismaHost + "/" + appName + "/prod",
+  debug: false
+},
+ rabbitMQ:{
+  host:"quantum-mq.da-an.ca",
   user: mqUser,
   password: mqPass
 },
 openId:{
-  url:"https://account.gccollab.ca",
+  url:"https://account.da-an.ca",
   id:clientId,
   secret:clientSecret
 },
