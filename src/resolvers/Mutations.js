@@ -72,9 +72,7 @@ async function createNotification(_, args, context, info){
     };
   }
 
-  return await context.prisma.mutation.createNotification({
-    data: createNotificationData,
-  }, info);
+  return await context.prisma.createNotification(createNotificationData, info);
 }
 
 
@@ -102,7 +100,7 @@ async function updateNotification(_, args, context, info){
     }
   };
 
-  return await context.prisma.mutation.updateNotification({
+  return await context.prisma.updateNotification({
     where: {
       id: args.id
     },

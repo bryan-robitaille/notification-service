@@ -1,15 +1,11 @@
 
-# The @isAuthenticated directive can be placed on the Query/Mutation, Object, and field level
-# The access token passed must be valid in order to proceed.
-directive @isAuthenticated on OBJECT | FIELD_DEFINITION
-
 type Query{
-    notifications(appID: String, actionLevel: String, skip: Int, first: Int): [Notification!]! @isAuthenticated
+    notifications(appID: String, actionLevel: String, skip: Int, first: Int): [Notification!]!
 }
 
 type Mutation{
-    createNotification(appID: String!, actionLink: String, actionLevel: actionLevel!, email: EmailInput, online: OnlineInput, whoDunIt: whoDunItInput): Notification! @isAuthenticated
-    updateNotification(id: ID!, online: UpdateOnlineInput): Notification! @isAuthenticated
+    createNotification(appID: String!, actionLink: String, actionLevel: actionLevel!, email: EmailInput, online: OnlineInput, whoDunIt: whoDunItInput): Notification!
+    updateNotification(id: ID!, online: UpdateOnlineInput): Notification!
 }
 
 enum actionLevel{

@@ -1,13 +1,14 @@
 const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
-const { Prisma } = require("prisma-binding");
+const config = require("./config");
+const { Prisma } = require("../prisma/generated/index");
 const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutations");
-const config = require("./config");
-const AuthDirectives = require("./Auth/Directives");
+const { applyMiddleware } = require("graphql-middleware");
 const fs = require("fs");
 const { connectMessageQueueListener } = require("./Service_Mesh/listener_connector");
 const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_connector");
 const introspect = require("./Auth/introspection");
+const { mustbeAuthenticated } = require("./Middleware/authMiddleware");
 
 const resolvers = {
   // Add any other files that contain custom Scalar types here
@@ -15,36 +16,49 @@ const resolvers = {
   Mutation,
 };
 
-const typeDefs = gql`${fs.readFileSync(__dirname.concat("/schema.graphql"), "utf8")}`;
+const authenticationRequiredApplications = {
+  Query:{
+    notifications: mustbeAuthenticated
+  },
+  Mutation:{
+    createNotification: mustbeAuthenticated,
+    updateNotification: mustbeAuthenticated
+  }
+};
 
-const schema = makeExecutableSchema({
+const typeDefs = gql(fs.readFileSync(__dirname.concat("/schema.graphql"), "utf8"));
+
+const schemaBeforeMiddleware = makeExecutableSchema({
   typeDefs,
   resolvers,
-  schemaDirectives: {
-    isAuthenticated: AuthDirectives.AuthenticatedDirective,
-    // list directives here.  Example:
-    // inOrganization: AuthDirectives.OrganizationDirective
-  },
   resolverValidationOptions: {
     requireResolversForResolveType: false
   }
 });
 
+const schema = applyMiddleware(
+  schemaBeforeMiddleware,
+  authenticationRequiredApplications,
+);
+
 const server = new ApolloServer({
   schema,
-  tracing: config.app.tracing, 
+  tracing: config.app.tracing,
+  introspection: true,
+  playground: true,
+  cors: {
+    origin: "*"
+  }, 
   context: async (req) => ({
     ...req,    
-    prisma: new Prisma({
-      typeDefs: "./src/generated/prisma.graphql",
-      endpoint: "http://"+config.prisma.host+":4466",
-      debug: config.prisma.debug,
-    }),
+    prisma: new Prisma(
+      {
+        endpoint: config.prisma.host
+      }      
+    ),
     token: await introspect.verifyToken(req),
   }),
 });
-
-
 
 server.listen().then(({ url }) => {
   // eslint-disable-next-line no-console

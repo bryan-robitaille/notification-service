@@ -2,7 +2,9 @@ const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
 const { addFragmentToInfo } = require("graphql-binding");
 
 function notifications(_, args, context, info) {
-  return context.prisma.query.notifications(
+
+
+  return context.prisma.notifications(
     {
       where:{
         gcID: context.token.sub,

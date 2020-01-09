@@ -1,14 +1,15 @@
 {
-  "name": "profile_service",
+  "name": "notification_service",
   "version": "1.0.0",
-  "description": "profile_service",
+  "description": "notification_service",
   "main": "src/cluster.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "start": "NODE_ENV=production node -r dotenv/config src/cluster.js",
-    "dev": "NODE_ENV=development node src/index.js",
+    "start": "env-cmd -e production node -r dotenv/config src/cluster.js",
+    "dev": "env-cmd -e development node src/index.js",
+    "generate": "env-cmd -e development yarn prisma generate",
     "deploy-dev": "env-cmd -e development yarn prisma deploy",
     "deploy-prod": "env-cmd -e production yarn prisma deploy",
     "prisma-admin-prod": "env-cmd -e production yarn prisma token",
@@ -43,16 +44,16 @@
     "apollo-server": "^2.4.3",
     "cluster": "^0.7.7",
     "codacy-coverage": "^3.4.0",
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.2.0",
     "env-cmd": "^10.0.1",
     "eslint": "^5.14.1",
     "express-jwt": "^5.3.1",
     "graphql": "^14.1.1",
     "graphql-binding": "^2.5.0",
+    "graphql-middleware": "^4.0.2",
     "node-fetch": "^2.3.0",
     "nodemailer": "^5.1.1",
     "prisma": "^1.27.0",
-    "prisma-binding": "^2.3.3",
     "request": "^2.88.0",
     "shortid": "^2.2.14",
     "uuid": "^3.3.2"

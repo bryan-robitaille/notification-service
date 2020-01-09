@@ -1,14 +1,10 @@
 // Handler for messages from different exchanges and keys
-const { Prisma } = require("prisma-binding");
+const { Prisma } = require("../../prisma/generated/index");
 const { publishMessageQueue } = require("./publisher_connector");
 const config = require("../config");
 
 const context = {
-    prisma: new Prisma({
-        typeDefs: "./src/generated/prisma.graphql",
-        endpoint: "http://"+config.prisma.host+":4466/profile/",
-        debug: config.prisma.debug,
-      }),
+    prisma: new Prisma(),
 };
 
 async function msgHandler(msg, success) {

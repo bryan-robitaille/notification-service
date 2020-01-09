@@ -5,10 +5,11 @@ const env = process.env.NODE_ENV;
 // Get app basic config settings for Prisma
 const appName = process.env.APP_NAME;
 const prismaHost =  process.env.PRISMA_HOST;
+const prismaSecret = process.env.PRISMA_SERVICE_SECRET;
 
 // OpenID provider clientID and Secret
-const clientId = process.env.client_id;
-const clientSecret = process.env.client_secret;
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
 
 // Message queue username and password
 const mqUser = process.env.MQ_USER;
@@ -28,7 +29,8 @@ const development = {
  },
  prisma: {
   host: prismaHost + "/" + appName + "/dev",
-  debug: true
+  debug: true,
+  secret: prismaSecret
 },
  rabbitMQ:{
    host:"localhost",
@@ -56,7 +58,8 @@ const production = {
  },
  prisma: {
   host: prismaHost + "/" + appName + "/prod",
-  debug: false
+  debug: false,
+  secret: prismaSecret
 },
  rabbitMQ:{
   host:"quantum-mq.da-an.ca",
